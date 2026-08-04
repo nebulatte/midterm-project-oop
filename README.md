@@ -1,1 +1,3 @@
-"# midterm-project-oop" 
+"# midterm-project-oop"
+
+"Centralize related logic within their respective files"
