@@ -172,24 +172,14 @@ public class Inventory {
         boolean byQuantity = pickAttribute == 1;
         boolean isAscending = pickOrder == 1;
 
-        sort(byQuantity, isAscending);
-        /* 
-        if(pickAttribute == 1 && pickOrder == 1) {
-            quantityAscendingSort();
-        } else if(pickAttribute == 1 && pickOrder == 2) {
-            quantityDescendingSort();
-        } else if(pickAttribute == 2 && pickOrder == 1) {
-            priceAscendingSort();
-        } else if(pickAttribute == 2 && pickOrder == 2) {
-            priceDescendingSort();
-        }
-        */
+        bubbleSort(byQuantity, isAscending);
+        
         displayAllItems();
     }
 
     // sortItems() HELPER METHODS
 
-    private void sort(boolean byQuantity, boolean isAscending) {
+    private void bubbleSort(boolean byQuantity, boolean isAscending) {
         boolean swapped;
         do {
             swapped = false;
@@ -208,71 +198,7 @@ public class Inventory {
             }
         } while(swapped);
     }
-    /*
-    private void quantityAscendingSort() {
-        boolean swapped;
-        do {
-            swapped = false;
-            for(int i = 0; i < items.size()-1; i++) {
-                Item firstItem = items.get(i);
-                Item secondItem = items.get(i+1);
-                if(firstItem.getQuantity() > secondItem.getQuantity()) {
-                    items.set(i, secondItem);
-                    items.set(i+1, firstItem);
-                    swapped = true;
-                }
-            }
-        } while(swapped);
-    }
-
-    private void quantityDescendingSort() {
-        boolean swapped;
-        do {
-            swapped = false;
-            for(int i = 0; i < items.size()-1; i++) {
-                Item firstItem = items.get(i);
-                Item secondItem = items.get(i+1);
-                if(firstItem.getQuantity() < secondItem.getQuantity()) {
-                    items.set(i, secondItem);
-                    items.set(i+1, firstItem);
-                    swapped = true;
-                }
-            }
-        } while(swapped);
-    }
-
-    private void priceAscendingSort() {
-        boolean swapped;
-        do {
-            swapped = false;
-            for(int i = 0; i < items.size()-1; i++) {
-                Item firstItem = items.get(i);
-                Item secondItem = items.get(i+1);
-                if(firstItem.getPrice() > secondItem.getPrice()) {
-                    items.set(i, secondItem);
-                    items.set(i+1, firstItem);
-                    swapped = true;
-                }
-            }
-        } while(swapped);
-    }
-
-    private void priceDescendingSort() {
-        boolean swapped;
-        do {
-            swapped = false;
-            for(int i = 0; i < items.size()-1; i++) {
-                Item firstItem = items.get(i);
-                Item secondItem = items.get(i+1);
-                if(firstItem.getPrice() < secondItem.getPrice()) {
-                    items.set(i, secondItem);
-                    items.set(i+1, firstItem);
-                    swapped = true;
-                }
-            }
-        } while(swapped);
-    }
-    */
+    
     // ====================================================================================================================
 
     public void displayLowStockItems() {
