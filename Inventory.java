@@ -3,38 +3,39 @@ import java.util.Scanner;
 
 public class Inventory {
 
-    final ArrayList<Item> items = new ArrayList<>();
+    ArrayList<Item> items = new ArrayList<>();
+
+    final float minPrice = 100.0f;
+    final float maxPrice = 100000.0f;
+
+    final int minQuantity = 0;
+    final int maxQuantity = 100;
+
+    final int lowStockLimit = 5;
 
     // ====================================================================================================================
 
     public void addItem(Scanner scanner) {
         Display.headerAddItem();
         String enteredCategory = Validators.validateString(scanner, "Enter the category: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid category.");
-        String checkedCategory = findCategory(enteredCategory);
+        String checkedCategory = isValidCategory(enteredCategory);
 
         if(checkedCategory == null) {
             System.out.printf("Category '%s' does not exist!%n", enteredCategory);
             return;
         }
 
-        if(enteredCategory.equalsIgnoreCase("clothing")) {
-            addItemDetails(scanner, enteredCategory, 200.0f, 3000.0f);
-        }
-        else if(enteredCategory.equalsIgnoreCase("electronics")) {
-            addItemDetails(scanner, enteredCategory, 500.0f, 100000.0f);
-        }
-        else if(enteredCategory.equalsIgnoreCase("entertainment")) {
-            addItemDetails(scanner, enteredCategory, 100.0f, 3000.0f);
-        }
+        addItemDetails(scanner, checkedCategory);
         System.out.println("Item added successfully!");
     }
 
     // addItem() HELPER METHODS
 
-    private void addItemDetails(Scanner scanner, String category, float minPrice, float maxPrice) {
+    private void addItemDetails(Scanner scanner, String category) {
+
         String id = Validators.validateString(scanner, "Enter the ID: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid id.");
         String name = Validators.validateString(scanner, "Enter the name: ", "[a-zA-Z ]+", "Invalid input. Enter a valid name.");
-        int quantity = Validators.validateInt(scanner, "Enter the quantity: ", 1, 100, "Invalid input. Enter a valid quantity [1-100].");
+        int quantity = Validators.validateInt(scanner, "Enter the quantity: ", minQuantity, maxQuantity, "Invalid input. Enter a valid quantity [1-100].");
         float price = Validators.validateFloat(scanner, "Enter the price: ", minPrice, maxPrice, String.format("Invalid input. Enter a valid price [%.2f-%.2f].", minPrice, maxPrice));
 
         if(category.equalsIgnoreCase("clothing")) {
@@ -77,7 +78,7 @@ public class Inventory {
         String itemName = currentItem.getName();
         float oldPrice = currentItem.getPrice();
         float newPrice = Validators.validateFloat(scanner, "Enter the item's new price: ", 
-        100.0f, 100000.0f, "Invalid input. Enter a valid price [100-100000].");
+        minPrice, maxPrice, "Invalid input. Enter a valid price [100-100000].");
 
         currentItem.setPrice(newPrice);
         System.out.printf("%s's price has been changed from %.2f to %.2f!%n", itemName, oldPrice, newPrice);
@@ -86,7 +87,7 @@ public class Inventory {
         String itemName = currentItem.getName();
         int oldQuantity = currentItem.getQuantity();
         int newQuantity = Validators.validateInt(scanner, "Enter the item's new quantity: ", 
-        0, 100, "Invalid input. Enter a valid quantity [0-100].");
+        minQuantity, maxQuantity, "Invalid input. Enter a valid quantity [0-100].");
 
         currentItem.setQuantity(newQuantity);
         System.out.printf("%s's quantity has been changed from %d to %d!%n", itemName, oldQuantity, newQuantity);
@@ -114,7 +115,7 @@ public class Inventory {
     public void displayItemsByCategory(Scanner scanner) {
         Display.headerDisplayItemsByCategory();
         String enteredCategory = Validators.validateString(scanner, "Enter the category: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid category.");
-        String checkedCategory = findCategory(enteredCategory);
+        String checkedCategory = isValidCategory(enteredCategory);
 
         if(checkedCategory == null) {
             System.out.printf("Category '%s' does not exist!%n", enteredCategory);
@@ -204,7 +205,7 @@ public class Inventory {
     public void displayLowStockItems() {
         Display.headerDisplayLowStockItems();
         Display.tableWithCategoryHeader();
-        final int lowStockLimit = 5;
+        
         for(int i = 0; i < items.size(); i++) {
             Item currentItem = items.get(i);
             if(currentItem.getQuantity() <= lowStockLimit) {
@@ -216,10 +217,10 @@ public class Inventory {
 
     // GENERAL HELPER METHODS ================================================================================================
 
-    private String findCategory(String searchCategory) {
-        boolean isExistingCategory = searchCategory.equalsIgnoreCase("Clothing") 
-                                || searchCategory.equalsIgnoreCase("Electronics") 
-                                || searchCategory.equalsIgnoreCase("Entertainment");
+    private String isValidCategory(String searchCategory) {
+        boolean isExistingCategory = searchCategory.equalsIgnoreCase("clothing") 
+                                || searchCategory.equalsIgnoreCase("electronics") 
+                                || searchCategory.equalsIgnoreCase("entertainment");
         if(!isExistingCategory) {
             return null;
         }
