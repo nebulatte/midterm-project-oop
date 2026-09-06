@@ -35,6 +35,7 @@ public class Inventory {
     private void addItemDetails(Scanner scanner, int category) {
 
         String id = Validators.validateString(scanner, "Enter the ID: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid id.");
+        if(findItemById(id) != null) { System.out.println("An item with that ID already exists."); return; }
         String name = Validators.validateString(scanner, "Enter the name: ", "[a-zA-Z ]+", "Invalid input. Enter a valid name.");
         int quantity = Validators.validateInt(scanner, "Enter the quantity: ", minQuantity, maxQuantity, String.format("Invalid input. Enter a valid quantity [%d-%d].", minQuantity, maxQuantity));
         float price = Validators.validateFloat(scanner, "Enter the price: ", minPrice, maxPrice, String.format("Invalid input. Enter a valid price [%.2f-%.2f].", minPrice, maxPrice));
@@ -261,9 +262,6 @@ public class Inventory {
     }
 
     private Item findItemById(String searchId) {
-        if(items.isEmpty()) {
-            System.out.println("There are no items available.");
-        }
         for (int i = 0; i < items.size(); i++) {
             Item currentItem = items.get(i);
             if (currentItem.getId().equalsIgnoreCase(searchId)) {
