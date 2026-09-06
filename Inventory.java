@@ -18,7 +18,7 @@ public class Inventory {
     public void addItem(Scanner scanner) {
         Display.headerAddItem();
         Display.categories();
-        int enteredCategory = Validators.validateInt(scanner, "Enter the category: ", 1, 3, "Invalid input. Enter a valid category.");
+        int enteredCategory = Validators.validateInt(scanner, "Enter the category: ", 1, 3, "Invalid input. Enter a valid number [1, 2, 3].");
         int checkedCategory = isValidCategory(enteredCategory);
 
         if(checkedCategory == -1) {
@@ -127,7 +127,7 @@ public class Inventory {
             return;
         }
         Display.categories();
-        int enteredCategory = Validators.validateInt(scanner, "Enter the category: ", 1, 3, "Invalid input. Enter a valid category.");
+        int enteredCategory = Validators.validateInt(scanner, "Enter the category: ", 1, 3, "Invalid input. Enter a valid number [1, 2, 3].");
         int checkedCategory = isValidCategory(enteredCategory);
 
         if(checkedCategory == -1) {
