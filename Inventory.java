@@ -8,7 +8,7 @@ public class Inventory {
     final float minPrice = 200.0f;
     final float maxPrice = 100000.0f;
 
-    final int minQuantity = 1;
+    final int minQuantity = 0;
     final int maxQuantity = 100;
 
     final int lowStockLimit = 5;
@@ -36,7 +36,7 @@ public class Inventory {
 
         String id = Validators.validateString(scanner, "Enter the ID: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid id.");
         String name = Validators.validateString(scanner, "Enter the name: ", "[a-zA-Z ]+", "Invalid input. Enter a valid name.");
-        int quantity = Validators.validateInt(scanner, "Enter the quantity: ", minQuantity, maxQuantity, String.format("Invalid input. Enter a valid quantity [%d-%d].", minQuantity, maxQuantity));
+        int quantity = Validators.validateInt(scanner, "Enter the quantity: ", minQuantity + 1, maxQuantity, String.format("Invalid input. Enter a valid quantity [%d-%d].", minQuantity, maxQuantity));
         float price = Validators.validateFloat(scanner, "Enter the price: ", minPrice, maxPrice, String.format("Invalid input. Enter a valid price [%.2f-%.2f].", minPrice, maxPrice));
         
         switch(category) {
@@ -185,7 +185,7 @@ public class Inventory {
         
         Display.tableWithCategoryHeader();
         System.out.printf(Display.tableWithCategoryFormat(), currentItem.getId(), 
-        currentItem.getName(), currentItem.getQuantity(), currentItem.getPrice(), currentItem.getCategory());
+        currentItem.getName(), currentItem.getQuantity(), currentItem.getPrice(), currentItem.getCategoryName());
     }
 
     // [7] ====================================================================================================================
@@ -245,7 +245,7 @@ public class Inventory {
             Item currentItem = items.get(i);
             if(currentItem.getQuantity() <= lowStockLimit) {
                 System.out.printf(Display.tableWithCategoryFormat(), currentItem.getId(), 
-                currentItem.getName(), currentItem.getQuantity(), currentItem.getPrice(), currentItem.getCategory());
+                currentItem.getName(), currentItem.getQuantity(), currentItem.getPrice(), currentItem.getCategoryName());
             }
         }
     }
