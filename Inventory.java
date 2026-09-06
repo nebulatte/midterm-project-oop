@@ -5,15 +5,15 @@ public class Inventory {
 
     ArrayList<Item> items = new ArrayList<>();
 
-    final float baseMinPrice = 200.0f;
-    final float baseMaxPrice = 100000.0f;
+    final float minPrice = 200.0f;
+    final float maxPrice = 100000.0f;
 
-    final int minQuantity = 0;
+    final int minQuantity = 1;
     final int maxQuantity = 100;
 
     final int lowStockLimit = 5;
 
-    // ====================================================================================================================
+    // [1] ====================================================================================================================
 
     public void addItem(Scanner scanner) {
         Display.headerAddItem();
@@ -36,8 +36,8 @@ public class Inventory {
 
         String id = Validators.validateString(scanner, "Enter the ID: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid id.");
         String name = Validators.validateString(scanner, "Enter the name: ", "[a-zA-Z ]+", "Invalid input. Enter a valid name.");
-        int quantity = Validators.validateInt(scanner, "Enter the quantity: ", minQuantity, maxQuantity, "Invalid input. Enter a valid quantity [1-100].");
-        float price = Validators.validateFloat(scanner, "Enter the price: ", baseMinPrice, baseMaxPrice, String.format("Invalid input. Enter a valid price [%.2f-%.2f].", baseMinPrice, baseMaxPrice));
+        int quantity = Validators.validateInt(scanner, "Enter the quantity: ", minQuantity, maxQuantity, String.format("Invalid input. Enter a valid quantity [%d-%d].", minQuantity, maxQuantity));
+        float price = Validators.validateFloat(scanner, "Enter the price: ", minPrice, maxPrice, String.format("Invalid input. Enter a valid price [%.2f-%.2f].", minPrice, maxPrice));
         
         switch(category) {
             case 1 -> items.add(new Clothing(id, name, quantity, price));
@@ -47,7 +47,7 @@ public class Inventory {
 
     }
     
-    // ====================================================================================================================
+    // [2] ====================================================================================================================
 
     public void updateItem(Scanner scanner) {
         Display.headerUpdateItem();
@@ -82,7 +82,7 @@ public class Inventory {
         String itemName = currentItem.getName();
         float oldPrice = currentItem.getPrice();
         float newPrice = Validators.validateFloat(scanner, "Enter the item's new price: ", 
-        currentItem.getMinPrice(), currentItem.getMaxPrice(), "Invalid input. Enter a valid price [100-100000].");
+        minPrice, maxPrice, String.format("Invalid input. Enter a valid price [%.2f-%.2f].", minPrice, maxPrice));
 
         currentItem.setPrice(newPrice);
         System.out.printf("%s's price has been changed from %.2f to %.2f!%n", itemName, oldPrice, newPrice);
@@ -91,13 +91,13 @@ public class Inventory {
         String itemName = currentItem.getName();
         int oldQuantity = currentItem.getQuantity();
         int newQuantity = Validators.validateInt(scanner, "Enter the item's new quantity: ", 
-        minQuantity, maxQuantity, "Invalid input. Enter a valid quantity [0-100].");
+        minQuantity, maxQuantity, String.format("Invalid input. Enter a valid quantity [%d-%d].", minQuantity, maxQuantity));
 
         currentItem.setQuantity(newQuantity);
         System.out.printf("%s's quantity has been changed from %d to %d!%n", itemName, oldQuantity, newQuantity);
     }
 
-    // ====================================================================================================================
+    // [3] ====================================================================================================================
 
     public void removeItem(Scanner scanner) {
         Display.headerRemoveItem();
@@ -118,7 +118,7 @@ public class Inventory {
         System.out.printf("Item '%s' has been removed from the inventory.%n", itemName);
     }
 
-    // ====================================================================================================================
+    // [4] ====================================================================================================================
 
     public void displayItemsByCategory(Scanner scanner) {
         Display.headerDisplayItemsByCategory();
@@ -127,14 +127,20 @@ public class Inventory {
             return;
         }
         Display.categories();
-        int enteredCategory = Validators.validateInt(scanner, "Enter the category:\n", 1, 3, "Invalid input. Enter a valid category.");
+        int enteredCategory = Validators.validateInt(scanner, "Enter the category: ", 1, 3, "Invalid input. Enter a valid category.");
         int checkedCategory = isValidCategory(enteredCategory);
 
         if(checkedCategory == -1) {
             System.out.printf("Category '%d' does not exist!%n", enteredCategory);
             return;
         }
-
+        // Displaying the table with the appropriate headers
+        
+        switch(enteredCategory) {
+            case 1 -> Display.labelClothing();
+            case 2 -> Display.labelElectronics();
+            case 3 -> Display.labelEntertainment();
+        }
         Display.tableHeader();
         for(int i = 0; i < items.size(); i++) {
             Item currentItem = items.get(i);
@@ -145,7 +151,7 @@ public class Inventory {
         }
     }
 
-    // ====================================================================================================================
+    // [5] ====================================================================================================================
 
     public void displayAllItems() {
         Display.headerDisplayAllItems();
@@ -157,11 +163,11 @@ public class Inventory {
         for(int i = 0; i < items.size(); i++) {
             Item currentItem = items.get(i);
             System.out.printf(Display.tableWithCategoryFormat(), currentItem.getId(), 
-            currentItem.getName(), currentItem.getQuantity(), currentItem.getPrice(), currentItem.getCategory());
+            currentItem.getName(), currentItem.getQuantity(), currentItem.getPrice(), currentItem.getCategoryName());
         }
     }
 
-    // ====================================================================================================================
+    // [6] ====================================================================================================================
 
     public void searchItem(Scanner scanner) {
         Display.headerSearchItem();
@@ -182,7 +188,7 @@ public class Inventory {
         currentItem.getName(), currentItem.getQuantity(), currentItem.getPrice(), currentItem.getCategory());
     }
 
-    // ====================================================================================================================
+    // [7] ====================================================================================================================
 
     public void sortItems(Scanner scanner) {
         Display.headerSortItems();
@@ -225,7 +231,7 @@ public class Inventory {
         } while(swapped);
     }
     
-    // ====================================================================================================================
+    // [8] ====================================================================================================================
 
     public void displayLowStockItems() {
         Display.headerDisplayLowStockItems();

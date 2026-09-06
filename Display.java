@@ -33,6 +33,17 @@ public class Display {
         System.out.println("[2] Descending");
     }
 
+    // DISPLAY BY CATEGORY HEADERS
+    public static void labelClothing() {
+        System.out.println("------------ CLOTHING ------------");
+    }
+    public static void labelElectronics() {
+        System.out.println("------------ ELECTRONICS ------------");
+    }
+    public static void labelEntertainment() {
+        System.out.println("------------ ENTERTAINMENT ------------");
+    }
+
     // HEADERS TO SHOW THE USER'S CURRENT ACTION
     public static void headerAddItem() {
         System.out.println("============ ADDING ITEM ============");
