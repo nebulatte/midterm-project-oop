@@ -41,7 +41,9 @@ public abstract class Item {
     }
 
     // ABSTRACT METHOD
-    public abstract String getCategory();
+    public abstract int getCategory();
+    public abstract float getMinPrice();
+    public abstract float getMaxPrice();
 
     // FORMATTING
     private String formatId(String id) {

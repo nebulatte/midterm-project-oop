@@ -5,8 +5,8 @@ public class Inventory {
 
     ArrayList<Item> items = new ArrayList<>();
 
-    final float minPrice = 100.0f;
-    final float maxPrice = 100000.0f;
+    final float baseMinPrice = 200.0f;
+    final float baseMaxPrice = 100000.0f;
 
     final int minQuantity = 0;
     final int maxQuantity = 100;
@@ -17,10 +17,11 @@ public class Inventory {
 
     public void addItem(Scanner scanner) {
         Display.headerAddItem();
-        String enteredCategory = Validators.validateString(scanner, "Enter the category: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid category.");
-        String checkedCategory = isValidCategory(enteredCategory);
+        Display.categories();
+        int enteredCategory = Validators.validateInt(scanner, "Enter the category: ", 1, 3, "Invalid input. Enter a valid category.");
+        int checkedCategory = isValidCategory(enteredCategory);
 
-        if(checkedCategory == null) {
+        if(checkedCategory == -1) {
             System.out.printf("Category '%s' does not exist!%n", enteredCategory);
             return;
         }
@@ -31,26 +32,29 @@ public class Inventory {
 
     // addItem() HELPER METHODS
 
-    private void addItemDetails(Scanner scanner, String category) {
+    private void addItemDetails(Scanner scanner, int category) {
 
         String id = Validators.validateString(scanner, "Enter the ID: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid id.");
         String name = Validators.validateString(scanner, "Enter the name: ", "[a-zA-Z ]+", "Invalid input. Enter a valid name.");
         int quantity = Validators.validateInt(scanner, "Enter the quantity: ", minQuantity, maxQuantity, "Invalid input. Enter a valid quantity [1-100].");
-        float price = Validators.validateFloat(scanner, "Enter the price: ", minPrice, maxPrice, String.format("Invalid input. Enter a valid price [%.2f-%.2f].", minPrice, maxPrice));
-
-        if(category.equalsIgnoreCase("clothing")) {
-            items.add(new Clothing(id, name, quantity, price));
-        } else if(category.equalsIgnoreCase("electronics")) {
-            items.add(new Electronics(id, name, quantity, price));
-        } else if(category.equalsIgnoreCase("entertainment")) {
-            items.add(new Entertainment(id, name, quantity, price));
+        float price = Validators.validateFloat(scanner, "Enter the price: ", baseMinPrice, baseMaxPrice, String.format("Invalid input. Enter a valid price [%.2f-%.2f].", baseMinPrice, baseMaxPrice));
+        
+        switch(category) {
+            case 1 -> items.add(new Clothing(id, name, quantity, price));
+            case 2 -> items.add(new Electronics(id, name, quantity, price));
+            case 3 -> items.add(new Entertainment(id, name, quantity, price));
         }
+
     }
     
     // ====================================================================================================================
 
     public void updateItem(Scanner scanner) {
         Display.headerUpdateItem();
+        if(items.isEmpty()) {
+            System.out.println("Inventory is empty.");
+            return;
+        }
         String enteredId = Validators.validateString(scanner, "Enter the ID: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid id.");
         Item currentItem = findItemById(enteredId);
 
@@ -78,7 +82,7 @@ public class Inventory {
         String itemName = currentItem.getName();
         float oldPrice = currentItem.getPrice();
         float newPrice = Validators.validateFloat(scanner, "Enter the item's new price: ", 
-        minPrice, maxPrice, "Invalid input. Enter a valid price [100-100000].");
+        currentItem.getMinPrice(), currentItem.getMaxPrice(), "Invalid input. Enter a valid price [100-100000].");
 
         currentItem.setPrice(newPrice);
         System.out.printf("%s's price has been changed from %.2f to %.2f!%n", itemName, oldPrice, newPrice);
@@ -97,6 +101,10 @@ public class Inventory {
 
     public void removeItem(Scanner scanner) {
         Display.headerRemoveItem();
+        if(items.isEmpty()) {
+            System.out.println("Inventory is empty.");
+            return;
+        }
         String enteredId = Validators.validateString(scanner, "Enter the ID: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid id.");
         Item currentItem = findItemById(enteredId);
         
@@ -114,18 +122,23 @@ public class Inventory {
 
     public void displayItemsByCategory(Scanner scanner) {
         Display.headerDisplayItemsByCategory();
-        String enteredCategory = Validators.validateString(scanner, "Enter the category: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid category.");
-        String checkedCategory = isValidCategory(enteredCategory);
+        if(items.isEmpty()) {
+            System.out.println("Inventory is empty.");
+            return;
+        }
+        Display.categories();
+        int enteredCategory = Validators.validateInt(scanner, "Enter the category:\n", 1, 3, "Invalid input. Enter a valid category.");
+        int checkedCategory = isValidCategory(enteredCategory);
 
-        if(checkedCategory == null) {
-            System.out.printf("Category '%s' does not exist!%n", enteredCategory);
+        if(checkedCategory == -1) {
+            System.out.printf("Category '%d' does not exist!%n", enteredCategory);
             return;
         }
 
         Display.tableHeader();
         for(int i = 0; i < items.size(); i++) {
             Item currentItem = items.get(i);
-            if(currentItem.getCategory().equalsIgnoreCase(enteredCategory)) {
+            if(currentItem.getCategory() == enteredCategory) {
                 System.out.printf(Display.tableFormat(), currentItem.getId(), 
                 currentItem.getName(), currentItem.getQuantity(), currentItem.getPrice());
             }
@@ -136,6 +149,10 @@ public class Inventory {
 
     public void displayAllItems() {
         Display.headerDisplayAllItems();
+        if(items.isEmpty()) {
+            System.out.println("Inventory is empty.");
+            return;
+        }
         Display.tableWithCategoryHeader();
         for(int i = 0; i < items.size(); i++) {
             Item currentItem = items.get(i);
@@ -148,6 +165,10 @@ public class Inventory {
 
     public void searchItem(Scanner scanner) {
         Display.headerSearchItem();
+        if(items.isEmpty()) {
+            System.out.println("Inventory is empty.");
+            return;
+        }
         String enteredId = Validators.validateString(scanner, "Enter the ID: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid id.");
         Item currentItem = findItemById(enteredId);
         
@@ -165,6 +186,10 @@ public class Inventory {
 
     public void sortItems(Scanner scanner) {
         Display.headerSortItems();
+        if(items.isEmpty()) {
+            System.out.println("Inventory is empty.");
+            return;
+        }
         Display.menuQuantityOrPrice();
         int pickAttribute = Validators.validateInt(scanner, "Enter your choice: ", 1, 2, "Invalid input. Enter 1 or 2.");
         Display.menuAscendingOrDescending();
@@ -204,6 +229,10 @@ public class Inventory {
 
     public void displayLowStockItems() {
         Display.headerDisplayLowStockItems();
+        if(items.isEmpty()) {
+            System.out.println("Inventory is empty.");
+            return;
+        }
         Display.tableWithCategoryHeader();
         
         for(int i = 0; i < items.size(); i++) {
@@ -217,14 +246,12 @@ public class Inventory {
 
     // GENERAL HELPER METHODS ================================================================================================
 
-    private String isValidCategory(String searchCategory) {
-        boolean isExistingCategory = searchCategory.equalsIgnoreCase("clothing") 
-                                || searchCategory.equalsIgnoreCase("electronics") 
-                                || searchCategory.equalsIgnoreCase("entertainment");
-        if(!isExistingCategory) {
-            return null;
+    private int isValidCategory(int searchCategory) {
+        if(searchCategory >= 1 && searchCategory <= 3) {
+            return searchCategory;
+        } else {
+            return -1;
         }
-        return searchCategory;
     }
 
     private Item findItemById(String searchId) {

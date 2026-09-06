@@ -15,6 +15,12 @@ public class Display {
         System.out.println("[9] Exit");
     }
 
+    public static void categories() {
+        System.out.println("[1] Clothing");
+        System.out.println("[2] Electronics");
+        System.out.println("[3] Entertainment");        
+    }
+
     public static void menuQuantityOrPrice() {
         System.out.println("Which attribute do you want to use?");
         System.out.println("[1] Quantity");
