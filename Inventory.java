@@ -36,7 +36,7 @@ public class Inventory {
 
         String id = Validators.validateString(scanner, "Enter the ID: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid id.");
         String name = Validators.validateString(scanner, "Enter the name: ", "[a-zA-Z ]+", "Invalid input. Enter a valid name.");
-        int quantity = Validators.validateInt(scanner, "Enter the quantity: ", minQuantity + 1, maxQuantity, String.format("Invalid input. Enter a valid quantity [%d-%d].", minQuantity, maxQuantity));
+        int quantity = Validators.validateInt(scanner, "Enter the quantity: ", minQuantity, maxQuantity, String.format("Invalid input. Enter a valid quantity [%d-%d].", minQuantity, maxQuantity));
         float price = Validators.validateFloat(scanner, "Enter the price: ", minPrice, maxPrice, String.format("Invalid input. Enter a valid price [%.2f-%.2f].", minPrice, maxPrice));
         
         switch(category) {
