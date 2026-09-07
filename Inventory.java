@@ -5,13 +5,20 @@ public class Inventory {
 
     ArrayList<Item> items = new ArrayList<>();
 
-    final float minPrice = 200.0f;
-    final float maxPrice = 100000.0f;
+    private final float minPrice = 200.0f;
+    private final float maxPrice = 100000.0f;
 
-    final int minQuantity = 0;
-    final int maxQuantity = 100;
+    private final int minQuantity = 0;
+    private final int maxQuantity = 100;
 
-    final int lowStockLimit = 5;
+    private final int lowStockLimit = 5;
+
+    // REGEX FORMATS
+    private final String ID_FORMAT = "[a-zA-Z]{4}[0-9]{6}";
+    private final String NAME_FORMAT = "[a-zA-Z ]+";
+    // ERROR MESSAGES
+    private final String idErrorMessage = "Invalid input. Enter a valid id. Ex: [ABCD123456]";
+    private final String nameErrorMessage = "Invalid input. Enter a valid name.";
 
     // [1] ====================================================================================================================
 
@@ -34,9 +41,9 @@ public class Inventory {
 
     private void addItemDetails(Scanner scanner, int category) {
 
-        String id = Validators.validateString(scanner, "Enter the ID: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid id.");
+        String id = Validators.validateString(scanner, "Enter the ID: ", ID_FORMAT, idErrorMessage);
         if(findItemById(id) != null) { System.out.println("An item with that ID already exists."); return; }
-        String name = Validators.validateString(scanner, "Enter the name: ", "[a-zA-Z ]+", "Invalid input. Enter a valid name.");
+        String name = Validators.validateString(scanner, "Enter the name: ", NAME_FORMAT, nameErrorMessage);
         int quantity = Validators.validateInt(scanner, "Enter the quantity: ", minQuantity, maxQuantity, String.format("Invalid input. Enter a valid quantity [%d-%d].", minQuantity, maxQuantity));
         float price = Validators.validateFloat(scanner, "Enter the price: ", minPrice, maxPrice, String.format("Invalid input. Enter a valid price [%.2f-%.2f].", minPrice, maxPrice));
         
@@ -56,7 +63,7 @@ public class Inventory {
             System.out.println("Inventory is empty.");
             return;
         }
-        String enteredId = Validators.validateString(scanner, "Enter the ID: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid id.");
+        String enteredId = Validators.validateString(scanner, "Enter the ID: ", ID_FORMAT, idErrorMessage);
         Item currentItem = findItemById(enteredId);
 
         if(currentItem == null) {
@@ -106,7 +113,7 @@ public class Inventory {
             System.out.println("Inventory is empty.");
             return;
         }
-        String enteredId = Validators.validateString(scanner, "Enter the ID: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid id.");
+        String enteredId = Validators.validateString(scanner, "Enter the ID: ", ID_FORMAT, idErrorMessage);
         Item currentItem = findItemById(enteredId);
         
         if(currentItem == null) {
@@ -176,7 +183,7 @@ public class Inventory {
             System.out.println("Inventory is empty.");
             return;
         }
-        String enteredId = Validators.validateString(scanner, "Enter the ID: ", "[a-zA-Z0-9]+", "Invalid input. Enter a valid id.");
+        String enteredId = Validators.validateString(scanner, "Enter the ID: ", ID_FORMAT, idErrorMessage);
         Item currentItem = findItemById(enteredId);
         
         if(currentItem == null) {
